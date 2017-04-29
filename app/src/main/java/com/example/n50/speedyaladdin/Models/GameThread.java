@@ -9,6 +9,7 @@ import android.view.SurfaceHolder;
 
 public class GameThread extends Thread {
 
+    private int FPS = 10;
     private boolean running;
     private GameSurface gameSurface;
     private SurfaceHolder surfaceHolder;
@@ -46,8 +47,8 @@ public class GameThread extends Thread {
             // Thời gian cập nhập lại giao diện Game
             // (Đổi từ Nanosecond ra milisecond).
             long waitTime = (now - startTime)/1000000;
-            if(waitTime < 10)  {
-                waitTime= 10; // Millisecond.
+            if(waitTime < (1000/FPS))  {
+                waitTime= (1000/FPS); // Millisecond.
             }
             System.out.print(" Wait Time="+ waitTime);
 

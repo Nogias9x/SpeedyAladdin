@@ -49,7 +49,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     // Thi hành phương thức của interface SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Bitmap chibiBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.chibi1);
+        Bitmap chibiBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
         this.chibi1 = new Aladdin(this,chibiBitmap1,100,50);
 
         this.gameThread = new GameThread(this,holder);
