@@ -1,6 +1,7 @@
 package com.example.n50.speedyaladdin.Models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 /**
  * Created by 12124 on 4/30/2017.
@@ -22,6 +23,17 @@ public abstract class GameObjectBase {
     protected int x;
     protected int y;
 
+    protected int SCREEN_WIDTH;
+    protected int SCREEN_HEIGHT;
+
+
+    public void setScreenSize(int w, int h){
+        this.SCREEN_WIDTH =  w;
+        this.SCREEN_HEIGHT =  h;
+        Log.d("NOGIAS","SCREEN_WIDTH: " + w);
+        Log.d("NOGIAS","SCREEN_HEIGHT: " + h);
+    }
+
     public GameObjectBase(Bitmap image, int rowCount, int colCount, int x, int y)  {
 
         this.image = image;
@@ -35,13 +47,13 @@ public abstract class GameObjectBase {
         this.HEIGHT = image.getHeight();
 
         this.width = this.WIDTH/ colCount;
-        this.height= this.HEIGHT/ rowCount;
+        this.height = this.HEIGHT/ rowCount;
     }
 
 
     protected Bitmap createSubImageAt(int row, int col)  {
         // createBitmap(bitmap, x, y, width, height).
-        Bitmap subImage = Bitmap.createBitmap(image, col* width, row* height ,width,height);
+        Bitmap subImage = Bitmap.createBitmap(image, col* width, row* height, width, height);
         return subImage;
     }
 

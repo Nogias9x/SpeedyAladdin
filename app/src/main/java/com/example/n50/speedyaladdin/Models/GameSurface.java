@@ -4,10 +4,13 @@ package com.example.n50.speedyaladdin.Models;
  * Created by 12124 on 4/30/2017.
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -49,8 +52,15 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     // Thi hành phương thức của interface SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int x = displayMetrics.widthPixels/6;
+        int y = displayMetrics.heightPixels/2;
+
+
+
         Bitmap chibiBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
-        this.chibi1 = new Aladdin(this,chibiBitmap1,100,50);
+        this.chibi1 = new Aladdin(this, chibiBitmap1, x, y, displayMetrics.widthPixels, displayMetrics.heightPixels);
 
         this.gameThread = new GameThread(this,holder);
         this.gameThread.setRunning(true);
@@ -82,4 +92,19 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            int x=  (int)event.getX();
+            int y = (int)event.getY();
+
+//            int movingVectorX =x-  this.chibi1.getX() ;
+//            int movingVectorY =y-  this.chibi1.getY() ;
+
+//            this.chibi1.setMovingVector(movingVectorX,movingVectorY);
+            this.chibi1.setMovingVectorForFlying(true);//fly up
+            return true;
+        }
+        return false;
+    }
 }
