@@ -21,6 +21,8 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private GameThread gameThread;
 
+    private Bitmap mScaledBackground;
+
     private Aladdin chibi1;
 
     public GameSurface(Context context)  {
@@ -45,6 +47,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas)  {
         super.draw(canvas);
 
+        canvas.drawBitmap(mScaledBackground, 0, 0, null); // draw the background
         this.chibi1.draw(canvas);
     }
 
@@ -52,6 +55,14 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     // Thi hành phương thức của interface SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        //background
+        Bitmap backgroundRaw = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
+        float scale = (float)backgroundRaw.getHeight()/(float)getHeight();
+        int newWidth = Math.round(backgroundRaw.getWidth()/scale);
+        int newHeight = Math.round(backgroundRaw.getHeight()/scale);
+        mScaledBackground = Bitmap.createScaledBitmap(backgroundRaw, newWidth, newHeight, true);
+
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int x = displayMetrics.widthPixels/6;

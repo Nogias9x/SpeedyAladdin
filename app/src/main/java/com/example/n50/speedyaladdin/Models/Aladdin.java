@@ -112,10 +112,16 @@ public class Aladdin extends GameObjectBase {
         this.y = y +  (int)(distance* movingVectorY / movingVectorLength);
 //
 //
+        //bay đụng nóc thì rớt xuống
+        if(this.y < 0){
+            setMovingVectorForFlying(false);
+        }
+
         //khi bay quá distance thì rơi xuống
         if(this.y < this.yPostionWhenTap - this.flyingDistanceEchTap){
             setMovingVectorForFlying(false);
         }
+
         //rớt xuống đất là thua
         Log.d("NOGIAS","Image.Y:" + this.height + "; Aladdin Y: " + this.y);
         if(this.y > this.gameSurface.getHeight()- height){
