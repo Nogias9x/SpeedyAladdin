@@ -23,11 +23,11 @@ public class Aladdin extends GameObjectBase {
     private Bitmap[] standStills;
 
     private int yPostionWhenTap;
-    private int flyingDistanceEchTap = 300;
+    private int flyingDistanceEchTap = 200;
 
 
     // Vận tốc di chuyển của nhân vật (pixel/milisecond).
-    public static final float VELOCITY = 0.3f;
+    public static final float VELOCITY = 0.4f;
 
     //Aladdin stands still at the beginning
     private int movingVectorX = 0;//10;
@@ -39,10 +39,9 @@ public class Aladdin extends GameObjectBase {
 
 
 
-    public Aladdin(GameSurface gameSurface, Bitmap image, int x, int y, int sw, int sh) {
+    public Aladdin(GameSurface gameSurface, Bitmap image, int x, int y) {
 
         super(image, 3, 16, x, y);
-        this.setScreenSize(sw, sh);
 
 
 
@@ -114,6 +113,7 @@ public class Aladdin extends GameObjectBase {
 //
         //bay đụng nóc thì rớt xuống
         if(this.y < 0){
+            this.y = 0;
             setMovingVectorForFlying(false);
         }
 

@@ -23,17 +23,6 @@ public abstract class GameObjectBase {
     protected int x;
     protected int y;
 
-    protected int SCREEN_WIDTH;
-    protected int SCREEN_HEIGHT;
-
-
-    public void setScreenSize(int w, int h){
-        this.SCREEN_WIDTH =  w;
-        this.SCREEN_HEIGHT =  h;
-        Log.d("NOGIAS","SCREEN_WIDTH: " + w);
-        Log.d("NOGIAS","SCREEN_HEIGHT: " + h);
-    }
-
     public GameObjectBase(Bitmap image, int rowCount, int colCount, int x, int y)  {
 
         this.image = image;

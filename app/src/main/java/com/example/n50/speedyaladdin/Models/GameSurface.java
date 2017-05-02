@@ -23,7 +23,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private Bitmap mScaledBackground;
 
-    private Aladdin chibi1;
+    private Aladdin aladdin;
+    private Obstacle obstacle1;
+    private Obstacle obstacle2;
 
     public GameSurface(Context context)  {
         super(context);
@@ -38,7 +40,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update()  {
-        this.chibi1.update();
+        this.aladdin.update();
+        this.obstacle1.update();
+        this.obstacle2.update();
     }
 
 
@@ -48,7 +52,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
 
         canvas.drawBitmap(mScaledBackground, 0, 0, null); // draw the background
-        this.chibi1.draw(canvas);
+        this.aladdin.draw(canvas);
+        this.obstacle1.draw(canvas);
+        this.obstacle2.draw(canvas);
     }
 
 
@@ -70,8 +76,14 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 
 
-        Bitmap chibiBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
-        this.chibi1 = new Aladdin(this, chibiBitmap1, x, y, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        Bitmap aladdinBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
+        this.aladdin = new Aladdin(this, aladdinBitmap, x, y);
+
+        Bitmap obstacle1Bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
+        this.obstacle1 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels, 0);
+
+        this.obstacle2 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels, 0);
+
 
         this.gameThread = new GameThread(this,holder);
         this.gameThread.setRunning(true);
@@ -109,11 +121,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
             int x=  (int)event.getX();
             int y = (int)event.getY();
 
-//            int movingVectorX =x-  this.chibi1.getX() ;
-//            int movingVectorY =y-  this.chibi1.getY() ;
+//            int movingVectorX =x-  this.aladdin.getX() ;
+//            int movingVectorY =y-  this.aladdin.getY() ;
 
-//            this.chibi1.setMovingVector(movingVectorX,movingVectorY);
-            this.chibi1.setMovingVectorForFlying(true);//fly up
+//            this.aladdin.setMovingVector(movingVectorX,movingVectorY);
+            this.aladdin.setMovingVectorForFlying(true);//fly up
             return true;
         }
         return false;
