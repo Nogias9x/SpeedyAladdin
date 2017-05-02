@@ -20,8 +20,9 @@ public abstract class GameObjectBase {
 
 
     protected final int height;
-    protected int x;
-    protected int y;
+    protected Coordinate mCoor;
+//    protected int x;
+//    protected int y;
 
     public GameObjectBase(Bitmap image, int rowCount, int colCount, int x, int y)  {
 
@@ -29,8 +30,9 @@ public abstract class GameObjectBase {
         this.rowCount= rowCount;
         this.colCount= colCount;
 
-        this.x= x;
-        this.y= y;
+        this.mCoor = new Coordinate();
+        this.mCoor.mX = x;
+        this.mCoor.mY= y;
 
         this.WIDTH = image.getWidth();
         this.HEIGHT = image.getHeight();
@@ -47,11 +49,11 @@ public abstract class GameObjectBase {
     }
 
     public int getX()  {
-        return this.x;
+        return this.mCoor.mX;
     }
 
     public int getY()  {
-        return this.y;
+        return this.mCoor.mY;
     }
 
 

@@ -107,24 +107,23 @@ public class Aladdin extends GameObjectBase {
 //
 //
 //        // Tính toán vị trí mới của nhân vật.
-        this.x = x +  (int)(distance* movingVectorX / movingVectorLength);
-        this.y = y +  (int)(distance* movingVectorY / movingVectorLength);
+        this.mCoor.mX = this.mCoor.mX +  (int)(distance* movingVectorX / movingVectorLength);
+        this.mCoor.mY = mCoor.mY +  (int)(distance* movingVectorY / movingVectorLength);
 //
 //
         //bay đụng nóc thì rớt xuống
-        if(this.y < 0){
-            this.y = 0;
+        if(this.mCoor.mY < 0){
+            this.mCoor.mY = 0;
             setMovingVectorForFlying(false);
         }
 
         //khi bay quá distance thì rơi xuống
-        if(this.y < this.yPostionWhenTap - this.flyingDistanceEchTap){
+        if(this.mCoor.mY < this.yPostionWhenTap - this.flyingDistanceEchTap){
             setMovingVectorForFlying(false);
         }
 
         //rớt xuống đất là thua
-        Log.d("NOGIAS","Image.Y:" + this.height + "; Aladdin Y: " + this.y);
-        if(this.y > this.gameSurface.getHeight()- height){
+        if(this.mCoor.mY > this.gameSurface.getHeight()- height){
             this.movingVectorX= 0;
             this.movingVectorY = 0;
         }
@@ -170,7 +169,7 @@ public class Aladdin extends GameObjectBase {
 
     public void draw(Canvas canvas)  {
         Bitmap bitmap = this.getCurrentMoveBitmap();
-        canvas.drawBitmap(bitmap,x, y, null);
+        canvas.drawBitmap(bitmap, this.mCoor.mX, this.mCoor.mY, null);
 
         // Thời điểm vẽ cuối cùng (Nano giây).
         this.lastDrawNanoTime= System.nanoTime();
@@ -183,7 +182,7 @@ public class Aladdin extends GameObjectBase {
 
     public void setMovingVectorForFlying(boolean isUp)  {
         if(isUp){
-            this.yPostionWhenTap = this.y;
+            this.yPostionWhenTap = this.mCoor.mY;
             this.rowUsing = ROW_BOTTOM_TO_TOP;
             this.movingVectorX= 0;
             this.movingVectorY = -1;

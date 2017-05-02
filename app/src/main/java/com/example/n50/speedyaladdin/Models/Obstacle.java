@@ -23,7 +23,7 @@ public class Obstacle extends GameObjectBase {
 
     public void setVisibleHeight() {
         this.visibleHeight = (rand.nextInt(visibleHeightMax) + visibleHeightMin);
-        this.y = this.gameSurface.getHeight() - 100*this.visibleHeight;
+        this.mCoor.mY = this.gameSurface.getHeight() - 100*this.visibleHeight;
     }
 
     // Vận tốc di chuyển của nhân vật (pixel/milisecond).
@@ -45,7 +45,7 @@ public class Obstacle extends GameObjectBase {
         this.gameSurface= gameSurface;
 
         setVisibleHeight();
-        this.x = x;
+        this.mCoor.mX = x;
 
 
 
@@ -95,16 +95,16 @@ public class Obstacle extends GameObjectBase {
 //
 //
 //        // Tính toán vị trí mới của nhân vật.
-        this.x = x +  (int)(distance* movingVectorX / movingVectorLength);
-        this.y = y +  (int)(distance* movingVectorY / movingVectorLength);
+        this.mCoor.mX = this.mCoor.mX +  (int)(distance* movingVectorX / movingVectorLength);
+        this.mCoor.mY = this.mCoor.mY +  (int)(distance* movingVectorY / movingVectorLength);
 
 
         //đụng vách trái thì trờ lại vách phải
-        if(this.x + this.width < 0){
+        if(this.mCoor.mX + this.width < 0){
 
 
             setVisibleHeight();
-            this.x = this.gameSurface.getWidth();
+            this.mCoor.mX = this.gameSurface.getWidth();
 
         }
 
@@ -154,7 +154,7 @@ public class Obstacle extends GameObjectBase {
 
     public void draw(Canvas canvas)  {
         Bitmap bitmap = this.getCurrentMoveBitmap();
-        canvas.drawBitmap(bitmap,x, y, null);
+        canvas.drawBitmap(bitmap, this.mCoor.mX, this.mCoor.mY, null);
 
         // Thời điểm vẽ cuối cùng (Nano giây).
         this.lastDrawNanoTime= System.nanoTime();

@@ -3,7 +3,7 @@
     package="com.example.n50.speedyaladdin">
 
     <application
-
+        android:name="com.example.n50.speedyaladdin.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

@@ -80,7 +80,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.aladdin = new Aladdin(this, aladdinBitmap, x, y);
 
         Bitmap obstacle1Bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
-        this.obstacle1 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels, 0);
+        this.obstacle1 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels/2, 0);
 
         this.obstacle2 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels, 0);
 
