@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.n50.speedyaladdin.Constant;
+import com.example.n50.speedyaladdin.MyApplication;
 import com.example.n50.speedyaladdin.R;
 
 public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
@@ -24,8 +26,10 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap mScaledBackground;
 
     private Aladdin aladdin;
-    private Obstacle obstacle1;
-    private Obstacle obstacle2;
+    private Obstacle obstacleTower1;
+    private Obstacle obstacleTower2;
+    private Obstacle obstacleWand1;
+    private Obstacle obstacleWand2;
 
     public GameSurface(Context context)  {
         super(context);
@@ -41,8 +45,14 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update()  {
         this.aladdin.update();
-        this.obstacle1.update();
-        this.obstacle2.update();
+        ((MyApplication)getContext().getApplicationContext()).mAladdinCurrentCoor = aladdin.mCoor;
+        this.obstacleTower1.update();
+        ((MyApplication)getContext().getApplicationContext()).mObstacle1CurrentCoor = obstacleTower1.mCoor;
+        this.obstacleWand1.update();
+
+        this.obstacleTower2.update();
+        ((MyApplication)getContext().getApplicationContext()).mObstacle2CurrentCoor = obstacleTower2.mCoor;
+        this.obstacleWand2.update();
     }
 
 
@@ -53,8 +63,12 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         canvas.drawBitmap(mScaledBackground, 0, 0, null); // draw the background
         this.aladdin.draw(canvas);
-        this.obstacle1.draw(canvas);
-        this.obstacle2.draw(canvas);
+        this.obstacleTower1.draw(canvas);
+        this.obstacleWand1.draw(canvas);
+
+        this.obstacleTower2.draw(canvas);
+        this.obstacleWand2.draw(canvas);
+
     }
 
 
@@ -77,12 +91,14 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 
         Bitmap aladdinBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
-        this.aladdin = new Aladdin(this, aladdinBitmap, x, y);
+        this.aladdin = new Aladdin(getContext(), this, aladdinBitmap, x, y);
 
-        Bitmap obstacle1Bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
-        this.obstacle1 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels/2, 0);
-
-        this.obstacle2 = new Obstacle(this, obstacle1Bitmap, displayMetrics.widthPixels, 0);
+        Bitmap obstacleTowerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
+        Bitmap obstacleWandBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.wand);
+        this.obstacleTower1 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 1, obstacleTowerBitmap, displayMetrics.widthPixels/2, 0);
+        this.obstacleWand1 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 1, obstacleWandBitmap, displayMetrics.widthPixels/2, 0);
+        this.obstacleTower2 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 2, obstacleTowerBitmap, displayMetrics.widthPixels, 0);
+        this.obstacleWand2 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 2, obstacleWandBitmap, displayMetrics.widthPixels, 0);
 
 
         this.gameThread = new GameThread(this,holder);

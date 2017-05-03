@@ -1,7 +1,11 @@
 package com.example.n50.speedyaladdin.Models;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
+import com.example.n50.speedyaladdin.Constant;
+import com.example.n50.speedyaladdin.MyApplication;
 
 import java.util.Random;
 
@@ -11,38 +15,43 @@ import java.util.Random;
 
 public class Obstacle extends GameObjectBase {
 
-    Random rand = new Random();
+    Random mRandSeed = new Random();
 
-    private int visibleHeight = 4;
-    private int visibleHeightMax = 10;
-    private int visibleHeightMin = 4;
+    private int mID;
+    private Constant.ObstacleType mObstacleType;
 
-    private int colUsing;
+    private int mVisibleHeight = 4;
 
-    private Bitmap[] obstacleImage;
 
-    public void setVisibleHeight() {
-        this.visibleHeight = (rand.nextInt(visibleHeightMax) + visibleHeightMin);
-        this.mCoor.mY = this.gameSurface.getHeight() - 100*this.visibleHeight;
-    }
+    private int mColUsing;
 
-    // Vận tốc di chuyển của nhân vật (pixel/milisecond).
-    public static final float VELOCITY = 0.3f;
+    private Bitmap[] mObstacleImage;
 
     //Aladdin stands still at the beginning
-    private int movingVectorX = 0;//10;
-    private int movingVectorY = 0;//5;
+    private int mMovingVectorX = 0;
+    private int mMovingVectorY = 0;
 
-    private long lastDrawNanoTime =-1;
+    private long mLastDrawNanoTime =-1;
 
-    private GameSurface gameSurface;
+    private GameSurface mGameSurface;
 
+    public void setVisibleHeight() {
+        if(this.mObstacleType == Constant.ObstacleType.TOWER){
+            this.mVisibleHeight = (mRandSeed.nextInt(Constant.VISIBLE_HEIGHT_MAX) + Constant.VISIBLE_HEIGHT_MIN);
+            this.mCoor.mY = this.mGameSurface.getHeight() - 100*this.mVisibleHeight;
+        } else { //WAND
+            this.mCoor.mY = 0; //toto: sua theo tower
+        }
 
+    }
 
-    public Obstacle(GameSurface gameSurface, Bitmap image, int x, int y) {
+    public Obstacle(Context context, GameSurface mGameSurface, Constant.ObstacleType obstacleType, int id, Bitmap image, int x, int y) {
 
-        super(image, 1, 1, x, y);
-        this.gameSurface= gameSurface;
+        super(context, image, 1, 1, x, y);
+        this.mGameSurface = mGameSurface;
+
+        this.mObstacleType = obstacleType;
+        this.mID = id;
 
         setVisibleHeight();
         this.mCoor.mX = x;
@@ -50,29 +59,29 @@ public class Obstacle extends GameObjectBase {
 
 
 
-        this.obstacleImage = new Bitmap[colCount]; // 3
+        this.mObstacleImage = new Bitmap[mColCount]; // 3
 
-        for(int col = 0; col< this.colCount; col++ ) {
-            this.obstacleImage[col]  = image;
+        for(int col = 0; col< this.mColCount; col++ ) {
+            this.mObstacleImage[col]  = image;
         }
 
         setMovingVectorForObstacle();
     }
 
     public Bitmap[] getMoveBitmaps()  {
-        return this.obstacleImage;
+        return this.mObstacleImage;
     }
 
     public Bitmap getCurrentMoveBitmap()  {
         Bitmap[] bitmaps = this.getMoveBitmaps();
-        return bitmaps[this.colUsing];
+        return bitmaps[this.mColUsing];
     }
 
 
     public void update()  {
-        this.colUsing++;
-        if(colUsing >= this.colCount)  {
-            this.colUsing =0;
+        this.mColUsing++;
+        if(mColUsing >= this.mColCount)  {
+            this.mColUsing =0;
         }
 
         // Thời điểm hiện tại theo nano giây.
@@ -80,31 +89,50 @@ public class Obstacle extends GameObjectBase {
 
 
         // Chưa vẽ lần nào.
-        if(lastDrawNanoTime==-1) {
-            lastDrawNanoTime= now;
+        if(mLastDrawNanoTime ==-1) {
+            mLastDrawNanoTime = now;
         }
 
         // Đổi nano giây ra mili giây (1 nanosecond = 1000000 millisecond).
-        int deltaTime = (int) ((now - lastDrawNanoTime)/ 1000000 );
+        int deltaTime = (int) ((now - mLastDrawNanoTime)/ 1000000 );
 
-
-//        // Quãng đường mà nhân vật đi được (fixel).
-        float distance = VELOCITY * deltaTime;
+        if(this.mObstacleType == Constant.ObstacleType.TOWER){
+            //        // Quãng đường mà nhân vật đi được (fixel).
+            float distance = Constant.OBSTACLE_VELOCITY * deltaTime;
 //
-        double movingVectorLength = Math.sqrt(movingVectorX* movingVectorX + movingVectorY*movingVectorY);
+            double movingVectorLength = Math.sqrt(mMovingVectorX * mMovingVectorX + mMovingVectorY * mMovingVectorY);
 //
 //
 //        // Tính toán vị trí mới của nhân vật.
-        this.mCoor.mX = this.mCoor.mX +  (int)(distance* movingVectorX / movingVectorLength);
-        this.mCoor.mY = this.mCoor.mY +  (int)(distance* movingVectorY / movingVectorLength);
+            this.mCoor.mX = this.mCoor.mX +  (int)(distance* mMovingVectorX / movingVectorLength);
+            this.mCoor.mY = this.mCoor.mY +  (int)(distance* mMovingVectorY / movingVectorLength);
 
 
-        //đụng vách trái thì trờ lại vách phải
-        if(this.mCoor.mX + this.width < 0){
+            //đụng vách trái thì trờ lại vách phải
+            if(this.mCoor.mX + this.width < 0){
+                Coordinate otherObstacleCoor;
+                if(this.mID == 1){ // obstacle 1
+                    otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
+                } else { // obstacle 2
+                    otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
+                }
 
+                if (otherObstacleCoor.mX <= mGameSurface.getWidth()/2){
+                    setVisibleHeight();
+                    this.mCoor.mX = this.mGameSurface.getWidth();
+                }
+            }
 
-            setVisibleHeight();
-            this.mCoor.mX = this.gameSurface.getWidth();
+        } else { // WAND
+            Coordinate towerObstacleCoor;
+            if(this.mID == 1){ // obstacle 1
+                towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
+            } else { // obstacle 2
+                towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
+            }
+            // Tính toán vị trí mới của nhân vật.
+            this.mCoor.mX = towerObstacleCoor.mX;
+            this.mCoor.mY = towerObstacleCoor.mY - Constant.DISTANCE_BOTTOM_TOP_OBSTACLE - this.height;
 
         }
 
@@ -124,31 +152,9 @@ public class Obstacle extends GameObjectBase {
 //
 //        //rớt xuống đất là thua
 //        Log.d("NOGIAS","Image.Y:" + this.height + "; Aladdin Y: " + this.y);
-//        if(this.y > this.gameSurface.getHeight()- height){
-//            this.movingVectorX= 0;
-//            this.movingVectorY = 0;
-//        }
-
-//
-
-
-//        // Tính toán rowUsing.
-//        if( movingVectorX > 0 )  {
-////            if(movingVectorY > 0 && Math.abs(movingVectorX) < Math.abs(movingVectorY)) {
-////                this.rowUsing = ROW_TOP_TO_BOTTOM;
-////            }else if(movingVectorY < 0 && Math.abs(movingVectorX) < Math.abs(movingVectorY)) {
-////                this.rowUsing = ROW_BOTTOM_TO_TOP;
-////            }else  {
-//                this.rowUsing = ROW_BOTTOM_TO_TOP;
-////            }
-//        } else {
-////            if(movingVectorY > 0 && Math.abs(movingVectorX) < Math.abs(movingVectorY)) {
-////                this.rowUsing = ROW_TOP_TO_BOTTOM;
-////            }else if(movingVectorY < 0 && Math.abs(movingVectorX) < Math.abs(movingVectorY)) {
-////                this.rowUsing = ROW_BOTTOM_TO_TOP;
-////            }else  {
-////                this.rowUsing = ROW_RIGHT_TO_LEFT;
-////            }
+//        if(this.y > this.mGameSurface.getHeight()- height){
+//            this.mMovingVectorX= 0;
+//            this.mMovingVectorY = 0;
 //        }
     }
 
@@ -157,24 +163,24 @@ public class Obstacle extends GameObjectBase {
         canvas.drawBitmap(bitmap, this.mCoor.mX, this.mCoor.mY, null);
 
         // Thời điểm vẽ cuối cùng (Nano giây).
-        this.lastDrawNanoTime= System.nanoTime();
+        this.mLastDrawNanoTime = System.nanoTime();
     }
 
     public void setMovingVectorForObstacle()  {
-        this.movingVectorX= -1;
-        this.movingVectorY = 0;
+        this.mMovingVectorX = -1;
+        this.mMovingVectorY = 0;
     }
 
     public void setMovingVectorForFlying(boolean isUp)  {
 //        if(isUp){
 //            this.yPostionWhenTap = this.y;
 //            this.rowUsing = ROW_BOTTOM_TO_TOP;
-//            this.movingVectorX= 0;
-//            this.movingVectorY = -1;
+//            this.mMovingVectorX= 0;
+//            this.mMovingVectorY = -1;
 //        } else {
 //            this.rowUsing = ROW_TOP_TO_BOTTOM;
-//            this.movingVectorX= 0;
-//            this.movingVectorY = 1;
+//            this.mMovingVectorX= 0;
+//            this.mMovingVectorY = 1;
 //        }
 
     }

@@ -36,17 +36,17 @@ public class UselessAladdin{// extends GameObjectBase {
 //
 //    private GameSurface gameSurface;
 //
-//    public UselessAladdin(GameSurface gameSurface, Bitmap image, int x, int y) {
-//        super(image, 3, 16, x, y);
+//    public UselessAladdin(GameSurface gameSurface, Bitmap mImage, int x, int y) {
+//        super(mImage, 3, 16, x, y);
 //
 //        this.gameSurface= gameSurface;
 //
-//        this.topToBottoms = new Bitmap[colCount]; // 3
-//        this.rightToLefts = new Bitmap[colCount]; // 3
-//        this.leftToRights = new Bitmap[colCount]; // 3
-//        this.bottomToTops = new Bitmap[colCount]; // 3
+//        this.topToBottoms = new Bitmap[mColCount]; // 3
+//        this.rightToLefts = new Bitmap[mColCount]; // 3
+//        this.leftToRights = new Bitmap[mColCount]; // 3
+//        this.bottomToTops = new Bitmap[mColCount]; // 3
 //
-//        for(int col = 0; col< this.colCount; col++ ) {
+//        for(int col = 0; col< this.mColCount; col++ ) {
 ////            this.topToBottoms[col] = this.createSubImageAt(ROW_TOP_TO_BOTTOM, col);
 ////            this.rightToLefts[col]  = this.createSubImageAt(ROW_RIGHT_TO_LEFT, col);
 //            this.leftToRights[col] = this.createSubImageAt(ROW_LEFT_TO_RIGHT, col);
@@ -77,7 +77,7 @@ public class UselessAladdin{// extends GameObjectBase {
 //
 //    public void update()  {
 //        this.colUsing++;
-//        if(colUsing >= this.colCount)  {
+//        if(colUsing >= this.mColCount)  {
 //            this.colUsing =0;
 //        }
 //

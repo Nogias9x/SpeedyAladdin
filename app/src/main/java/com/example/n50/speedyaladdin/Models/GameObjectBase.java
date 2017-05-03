@@ -1,50 +1,50 @@
 package com.example.n50.speedyaladdin.Models;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 /**
  * Created by 12124 on 4/30/2017.
  */
 
 public abstract class GameObjectBase {
-    protected Bitmap image;
+    protected Context mContext;
 
-    protected final int rowCount;
-    protected final int colCount;
+    protected Bitmap mImage;
+
+    protected final int mRowCount;
+    protected final int mColCount;
 
     protected final int WIDTH;
     protected final int HEIGHT;
 
     protected final int width;
-
-
     protected final int height;
+
     protected Coordinate mCoor;
-//    protected int x;
-//    protected int y;
 
-    public GameObjectBase(Bitmap image, int rowCount, int colCount, int x, int y)  {
+    public GameObjectBase(Context context, Bitmap mImage, int mRowCount, int mColCount, int x, int y)  {
 
-        this.image = image;
-        this.rowCount= rowCount;
-        this.colCount= colCount;
+        this.mContext = context;
+        this.mImage = mImage;
+        this.mRowCount = mRowCount;
+        this.mColCount = mColCount;
 
         this.mCoor = new Coordinate();
         this.mCoor.mX = x;
         this.mCoor.mY= y;
 
-        this.WIDTH = image.getWidth();
-        this.HEIGHT = image.getHeight();
+        this.WIDTH = mImage.getWidth();
+        this.HEIGHT = mImage.getHeight();
 
-        this.width = this.WIDTH/ colCount;
-        this.height = this.HEIGHT/ rowCount;
+        this.width = this.WIDTH/ mColCount;
+        this.height = this.HEIGHT/ mRowCount;
     }
 
 
     protected Bitmap createSubImageAt(int row, int col)  {
         // createBitmap(bitmap, x, y, width, height).
-        Bitmap subImage = Bitmap.createBitmap(image, col* width, row* height, width, height);
+        Bitmap subImage = Bitmap.createBitmap(mImage, col* width, row* height, width, height);
         return subImage;
     }
 
