@@ -1,6 +1,7 @@
 package com.example.n50.speedyaladdin.Models;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
@@ -86,7 +87,7 @@ public class Aladdin extends GameObjectBase {
 
 
     public void update()  {
-        if(((MyApplication)mContext.getApplicationContext()).isEndGame == true) {
+        if(((MyApplication)mContext.getApplicationContext()).mIsEndGame == true) {
             this.mCoor.mX = mGameSurface.getWidth();
         } else{
             this.mColUsing++;
@@ -136,7 +137,7 @@ public class Aladdin extends GameObjectBase {
                 endGame();
             }
 
-            //todo: đụng obstacle thì thua
+            //đụng obstacle thì thua
             Obstacle obst1, obst2;
             obst1 = ((MyApplication)mContext.getApplicationContext()).mObstacle1Current;
             obst2 = ((MyApplication)mContext.getApplicationContext()).mObstacle2Current;
@@ -153,6 +154,7 @@ public class Aladdin extends GameObjectBase {
             }
 
             if(isTouching) endGame();
+
         }
 
 
@@ -199,6 +201,14 @@ public class Aladdin extends GameObjectBase {
         return false;
     }
     public void endGame(){
-        ((MyApplication)mContext.getApplicationContext()).isEndGame = true;
+        // save best score
+        MyApplication myApplication = ((MyApplication)mContext.getApplicationContext());
+        if(myApplication.mScore > myApplication.mBestScore){
+            SharedPreferences.Editor editor = mContext.getSharedPreferences(Constant.MY_PREFS, mContext.MODE_PRIVATE).edit();
+            editor.putInt(Constant.PREF_BEST_SCORE, myApplication.mScore);
+            editor.commit();
+            Log.d("SCORE","Load: " + myApplication.mScore);
+        }
+        myApplication.mIsEndGame = true;
     }
 }

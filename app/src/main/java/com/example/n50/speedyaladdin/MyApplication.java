@@ -1,6 +1,8 @@
 package com.example.n50.speedyaladdin;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.n50.speedyaladdin.Models.Coordinate;
 import com.example.n50.speedyaladdin.Models.Obstacle;
@@ -13,17 +15,23 @@ public class MyApplication extends Application{
     public Coordinate mAladdinCurrentCoor;
     public Obstacle mObstacle1Current;
     public Obstacle mObstacle2Current;
-    public boolean isPlaying;
-    public boolean isEndGame;
+    public boolean mIsPlaying;
+    public boolean mIsEndGame;
+    public int mScore;
+    public int mBestScore;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        isPlaying = false;
-        isEndGame = false;
+        mIsPlaying = false;
+        mIsEndGame = false;
+        mScore = 0;
+
+        SharedPreferences prefs = getSharedPreferences(Constant.MY_PREFS, MODE_PRIVATE);
+        mBestScore = prefs.getInt(Constant.PREF_BEST_SCORE, 0);
+
+        Log.d("SCORE","Load: " + mBestScore);
 
         mAladdinCurrentCoor = new Coordinate();
-//        mObstacle1Current = new Obstacle();
-//        mObstacle2Current = new Obstacle();
     }
 }

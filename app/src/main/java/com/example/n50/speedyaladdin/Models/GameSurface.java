@@ -6,6 +6,7 @@ package com.example.n50.speedyaladdin.Models;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -44,8 +45,29 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private boolean soundPoolLoaded;
     private SoundPool soundPool;
 
+    private Paint mStrokePaint;
+    private Paint mTextPaint;
+    private Paint mScorePaint;
+
+
     public GameSurface(Context context)  {
         super(context);
+
+        mStrokePaint = new Paint();
+        mStrokePaint.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
+        mStrokePaint.setStyle(Paint.Style.STROKE);
+        mStrokePaint.setTextSize(70);
+        mStrokePaint.setStrokeWidth(20);
+        mStrokePaint.setColor(Color.WHITE);
+        mTextPaint = new Paint();
+        mTextPaint.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
+        mTextPaint.setColor(Color.GREEN);
+        mTextPaint.setTextSize(70);
+
+        mScorePaint = new Paint();
+        mScorePaint.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
+        mScorePaint.setColor(Color.GRAY);
+        mScorePaint.setTextSize(50);
 
 
         // Đảm bảo Game Surface có thể focus để điều khiển các sự kiện.
@@ -151,44 +173,39 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         paintText.setTextSize(70);
 
 
-        canvas.drawRect(aladdin.mCoor.mX +Aladdin.mPaddingHor, //left
-                aladdin.mCoor.mY +Aladdin.mPaddingVer, //top
-                aladdin.mCoor.mX + aladdin.getWidth() -Aladdin.mPaddingHor, //right
-                 aladdin.mCoor.mY + aladdin.getHeight() -Aladdin.mPaddingVer,//bottom
-                paintText);
+//        canvas.drawRect(aladdin.mCoor.mX +Aladdin.mPaddingHor, //left
+//                aladdin.mCoor.mY +Aladdin.mPaddingVer, //top
+//                aladdin.mCoor.mX + aladdin.getWidth() -Aladdin.mPaddingHor, //right
+//                 aladdin.mCoor.mY + aladdin.getHeight() -Aladdin.mPaddingVer,//bottom
+//                paintText);
 
 
 
         // draw text
-        if(((MyApplication)getContext().getApplicationContext()).isPlaying == false) {
-            drawText(canvas, "TAP TO\nSTART!!!");
+        if(((MyApplication)getContext().getApplicationContext()).mIsPlaying == false) {
+            drawText(mStrokePaint, canvas, "TAP TO\nSTART!!!", 200, getHeight()/2 - 100);
+            drawText(mTextPaint, canvas, "TAP TO\nSTART!!!", 200, getHeight()/2 - 100);
+
+        } else {
+            //draw score
+            drawText(mScorePaint, canvas, "Best score: "+((MyApplication)getContext().getApplicationContext()).mBestScore, 50, 100);
+            drawText(mScorePaint, canvas, ""+((MyApplication)getContext().getApplicationContext()).mScore, 50, 200);
+
         }
 
         // draw text
-        if(((MyApplication)getContext().getApplicationContext()).isEndGame == true) {
-            drawText(canvas, "ENDGAME!!!");
+        if(((MyApplication)getContext().getApplicationContext()).mIsEndGame == true) {
+            drawText(mStrokePaint, canvas, "GAME OVER", 200, getHeight()/2 - 100);
+            drawText(mTextPaint, canvas, "GAME OVER", 200, getHeight()/2 - 100);
         }
+
 
 
 
     }
 
-    public void drawText(Canvas canvas, String stringStart){
-        Paint stkPaint = new Paint();
-        stkPaint.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
-        stkPaint.setStyle(Paint.Style.STROKE);
-        stkPaint.setTextSize(70);
-        stkPaint.setStrokeWidth(20);
-        stkPaint.setColor(Color.WHITE);
-        canvas.drawText(stringStart, 200, getHeight()/2 - 100, stkPaint);
-
-        Paint paintText = new Paint();
-        paintText.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
-        paintText.setColor(Color.GREEN);
-        paintText.setTextSize(70);
-        canvas.drawText(stringStart, 200, getHeight()/2 - 100, paintText);
-
-
+    public void drawText(Paint paint, Canvas canvas, String stringStart, int x, int y){
+        canvas.drawText(stringStart, x, y, paint);
     }
 
     // Thi hành phương thức của interface SurfaceHolder.Callback
@@ -210,34 +227,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 
         Bitmap aladdinBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
-
-//        //>>
-//        int picw = aladdinBitmap.getWidth();
-//        int pich = aladdinBitmap.getHeight();
-//        int[] pix = new int[picw * pich];
-//        aladdinBitmap.getPixels(pix, 0, picw, 0, 0, picw, pich);
-//
-//        int RR, GG, BB,Y;
-//
-//        for (int i = 0; i < pich; i++){
-//            for (int j = 0; j < picw; j++)
-//            {
-//                int index = i * picw + j;
-//                RR = (pix[index] >> 16) & 0xff;     //bitwise shifting
-//                GG = (pix[index] >> 8) & 0xff;
-//                BB = pix[index] & 0xff;
-//
-//                Log.d("BITMAP", "["+ i +", "+ j +"]= ("+ RR +", "+ GG +", "+ BB +")");
-////                "+ xxx +"
-//
-//                //R,G.B - Red, Green, Blue
-//                //to restore the values after RGB modification, use
-//                //next statement
-//                pix[index] = 0xff000000 | (RR << 16) | (GG << 8) | BB;
-//            }
-//        }
-//        //<<
-
         this.aladdin = new Aladdin(getContext(), this, aladdinBitmap, x, y);
 
         Bitmap obstacleTowerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
@@ -285,16 +274,19 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int x=  (int)event.getX();
-            int y = (int)event.getY();
+//            int x=  (int)event.getX();
+//            int y = (int)event.getY();
+            if(((MyApplication)getContext().getApplicationContext()).mIsEndGame == true){
+                Intent intent = getContext().getPackageManager()
+                        .getLaunchIntentForPackage( getContext().getPackageName() );
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                getContext().startActivity(intent);
+            } else {
+                ((MyApplication)getContext().getApplicationContext()).mIsPlaying = true;
+                this.aladdin.setMovingVectorForFlying(true);//fly up
+            }
 
-            ((MyApplication)getContext().getApplicationContext()).isPlaying = true;
 
-//            int movingVectorX =x-  this.aladdin.getX() ;
-//            int movingVectorY =y-  this.aladdin.getY() ;
-
-//            this.aladdin.setMovingVector(movingVectorX,movingVectorY);
-            this.aladdin.setMovingVectorForFlying(true);//fly up
             return true;
         }
         return false;

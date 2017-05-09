@@ -12,6 +12,9 @@ public final class Constant {
     public static final float ALADDIN_VELOCITY = 0.4f;
     public static final float OBSTACLE_VELOCITY = 0.3f;
 
+    public static final String MY_PREFS = "my_prefs";
+    public static final String PREF_BEST_SCORE = "pref_best_score";
+
 
     public enum ObstacleType {
         TOWER(1), WAND(2);

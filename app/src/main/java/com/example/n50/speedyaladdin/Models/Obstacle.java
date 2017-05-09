@@ -80,9 +80,9 @@ public class Obstacle extends GameObjectBase {
 
 
     public void update()  {
-        if(((MyApplication)mContext.getApplicationContext()).isEndGame == true) {
+        if(((MyApplication)mContext.getApplicationContext()).mIsEndGame == true) {
         } else {
-            if (((MyApplication) mContext.getApplicationContext()).isPlaying == true) {
+            if (((MyApplication) mContext.getApplicationContext()).mIsPlaying == true) {
                 this.mColUsing++;
                 if (mColUsing >= this.mColCount) {
                     this.mColUsing = 0;
@@ -107,7 +107,7 @@ public class Obstacle extends GameObjectBase {
                     double movingVectorLength = Math.sqrt(mMovingVectorX * mMovingVectorX + mMovingVectorY * mMovingVectorY);
 //
 //
-//        // Tính toán vị trí mới của nhân vật.
+//                  // Tính toán vị trí mới của nhân vật.
                     this.mCoor.mX = this.mCoor.mX + (int) (distance * mMovingVectorX / movingVectorLength);
                     this.mCoor.mY = this.mCoor.mY + (int) (distance * mMovingVectorY / movingVectorLength);
 
@@ -124,7 +124,12 @@ public class Obstacle extends GameObjectBase {
                         if (otherObstacleCoor.mX <= mGameSurface.getWidth() / 2) {
                             setVisibleHeight();
                             this.mCoor.mX = this.mGameSurface.getWidth();
+
+                            // cộng điểm
+                            ((MyApplication)mContext.getApplicationContext()).mScore ++;
                         }
+
+
                     }
 
                 } else { // TOWER
