@@ -146,14 +146,19 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         // draw text
         if(((MyApplication)getContext().getApplicationContext()).isPlaying == false) {
-            drawStartText(canvas);
+            drawText(canvas, "TAP TO\nSTART!!!");
         }
+
+        // draw text
+        if(((MyApplication)getContext().getApplicationContext()).isEndGame == true) {
+            drawText(canvas, "ENDGAME!!!");
+        }
+
 
 
     }
 
-    public void drawStartText(Canvas canvas){
-        String stringStart= "TAP TO START!!!";
+    public void drawText(Canvas canvas, String stringStart){
         Paint stkPaint = new Paint();
         stkPaint.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
         stkPaint.setStyle(Paint.Style.STROKE);

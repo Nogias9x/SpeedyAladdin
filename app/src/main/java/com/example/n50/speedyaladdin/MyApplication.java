@@ -14,11 +14,14 @@ public class MyApplication extends Application{
     public Obstacle mObstacle1Current;
     public Obstacle mObstacle2Current;
     public boolean isPlaying;
+    public boolean isEndGame;
 
     @Override
     public void onCreate() {
         super.onCreate();
         isPlaying = false;
+        isEndGame = false;
+
         mAladdinCurrentCoor = new Coordinate();
 //        mObstacle1Current = new Obstacle();
 //        mObstacle2Current = new Obstacle();

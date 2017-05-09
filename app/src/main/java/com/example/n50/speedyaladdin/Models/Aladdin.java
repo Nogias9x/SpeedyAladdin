@@ -82,66 +82,69 @@ public class Aladdin extends GameObjectBase {
 
 
     public void update()  {
-        Log.d("NOGIAS", "Aladdin update()");
+        if(((MyApplication)mContext.getApplicationContext()).isEndGame == true) {
+            this.mCoor.mX = mGameSurface.getWidth();
+        } else{
+            this.mColUsing++;
+            if(mColUsing >= this.mColCount)  {
+                this.mColUsing =0;
+            }
 
-        this.mColUsing++;
-        if(mColUsing >= this.mColCount)  {
-            this.mColUsing =0;
-        }
-
-        // Thời điểm hiện tại theo nano giây.
-        long now = System.nanoTime();
+            // Thời điểm hiện tại theo nano giây.
+            long now = System.nanoTime();
 
 
-        // Chưa vẽ lần nào.
-        if(mLastDrawNanoTime ==-1) {
-            mLastDrawNanoTime = now;
-        }
+            // Chưa vẽ lần nào.
+            if(mLastDrawNanoTime ==-1) {
+                mLastDrawNanoTime = now;
+            }
 
-        // Đổi nano giây ra mili giây (1 nanosecond = 1000000 millisecond).
-        int deltaTime = (int) ((now - mLastDrawNanoTime)/ 1000000 );
+            // Đổi nano giây ra mili giây (1 nanosecond = 1000000 millisecond).
+            int deltaTime = (int) ((now - mLastDrawNanoTime)/ 1000000 );
 
 
 //        // Quãng đường mà nhân vật đi được (fixel).
-        float distance = Constant.ALADDIN_VELOCITY * deltaTime;
+            float distance = Constant.ALADDIN_VELOCITY * deltaTime;
 //
-        double movingVectorLength = Math.sqrt(mMovingVectorX * mMovingVectorX + mMovingVectorY * mMovingVectorY);
+            double movingVectorLength = Math.sqrt(mMovingVectorX * mMovingVectorX + mMovingVectorY * mMovingVectorY);
 //
 //
 //        // Tính toán vị trí mới của nhân vật.
-        this.mCoor.mX = this.mCoor.mX +  (int)(distance* mMovingVectorX / movingVectorLength);
-        this.mCoor.mY = mCoor.mY +  (int)(distance* mMovingVectorY / movingVectorLength);
+            this.mCoor.mX = this.mCoor.mX +  (int)(distance* mMovingVectorX / movingVectorLength);
+            this.mCoor.mY = mCoor.mY +  (int)(distance* mMovingVectorY / movingVectorLength);
 
 //
-        //bay đụng nóc thì rớt xuống
-        if(this.mCoor.mY < 0){
-            this.mCoor.mY = 0;
-            setMovingVectorForFlying(false);
+            //bay đụng nóc thì rớt xuống
+            if(this.mCoor.mY < 0){
+                this.mCoor.mY = 0;
+                setMovingVectorForFlying(false);
+            }
+
+            //khi bay quá distance thì rơi xuống
+            if(this.mCoor.mY < this.mYPostionWhenTap - this.mFlyingDistanceEchTap){
+                setMovingVectorForFlying(false);
+            }
+
+            //rớt xuống đất là thua
+            if(this.mCoor.mY > this.mGameSurface.getHeight()- height){
+                this.mMovingVectorX = 0;
+                this.mMovingVectorY = 0;
+                endGame();
+            }
+
+            //todo: đụng obstacle thì thua
+            Obstacle obst1, obst2;
+            obst1 = ((MyApplication)mContext.getApplicationContext()).mObstacle1Current;
+            obst2 = ((MyApplication)mContext.getApplicationContext()).mObstacle2Current;
+            Boolean isTouching;
+            if(obst1.mCoor.mX < obst2.mCoor.mX){ // ob1    ob2
+                isTouching= isAladdinTouching(obst1);
+            } else{ // ob2    ob1
+                isTouching= isAladdinTouching(obst2);
+            }
+            if(isTouching) endGame();
         }
 
-        //khi bay quá distance thì rơi xuống
-        if(this.mCoor.mY < this.mYPostionWhenTap - this.mFlyingDistanceEchTap){
-            setMovingVectorForFlying(false);
-        }
-
-        //rớt xuống đất là thua
-        if(this.mCoor.mY > this.mGameSurface.getHeight()- height){
-            this.mMovingVectorX = 0;
-            this.mMovingVectorY = 0;
-            endGame();
-        }
-
-        //todo: đụng obstacle thì thua
-        Obstacle obst1, obst2;
-        obst1 = ((MyApplication)mContext.getApplicationContext()).mObstacle1Current;
-        obst2 = ((MyApplication)mContext.getApplicationContext()).mObstacle2Current;
-        Boolean isTouching;
-        if(obst1.mCoor.mX < obst2.mCoor.mX){ // ob1    ob2
-            isTouching= isAladdinTouching(obst1);
-        } else{ // ob2    ob1
-            isTouching= isAladdinTouching(obst2);
-        }
-        if(isTouching) endGame();
 
     }
 
@@ -182,6 +185,9 @@ public class Aladdin extends GameObjectBase {
     }
     public void endGame(){
         Log.d("ENDGAME", "ENDGAME!!!!!");
+//        mGameSurface.drawText();
+        ((MyApplication)mContext.getApplicationContext()).isEndGame = true;
+
 
     }
 }
