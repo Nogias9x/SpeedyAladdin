@@ -121,11 +121,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.aladdin.update();
         ((MyApplication)getContext().getApplicationContext()).mAladdinCurrentCoor = aladdin.mCoor;
         this.obstacleTower1.update();
-        ((MyApplication)getContext().getApplicationContext()).mObstacle1CurrentCoor = obstacleTower1.mCoor;
+        ((MyApplication)getContext().getApplicationContext()).mObstacle1Current = obstacleTower1;
         this.obstacleWand1.update();
 
         this.obstacleTower2.update();
-        ((MyApplication)getContext().getApplicationContext()).mObstacle2CurrentCoor = obstacleTower2.mCoor;
+        ((MyApplication)getContext().getApplicationContext()).mObstacle2Current = obstacleTower2;
         this.obstacleWand2.update();
     }
 
@@ -135,6 +135,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas)  {
         super.draw(canvas);
 
+        Log.d("NOGIAS", "GameSuface draw()");
         canvas.drawBitmap(mScaledBackground, 0, 0, null); // draw the background
         this.aladdin.draw(canvas);
         this.obstacleTower1.draw(canvas);
@@ -223,6 +224,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.obstacleWand1 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 1, obstacleWandBitmap, displayMetrics.widthPixels, 0);
         this.obstacleTower2 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 2, obstacleTowerBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
         this.obstacleWand2 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 2, obstacleWandBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
+
+        ((MyApplication)((Activity) getContext()).getApplication()).mObstacle1Current = this.obstacleWand1;
+        ((MyApplication)((Activity) getContext()).getApplication()).mObstacle2Current = this.obstacleWand2;
 
 
         this.gameThread = new GameThread(this,holder);

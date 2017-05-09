@@ -82,6 +82,8 @@ public class Aladdin extends GameObjectBase {
 
 
     public void update()  {
+        Log.d("NOGIAS", "Aladdin update()");
+
         this.mColUsing++;
         if(mColUsing >= this.mColCount)  {
             this.mColUsing =0;
@@ -130,14 +132,14 @@ public class Aladdin extends GameObjectBase {
         }
 
         //todo: đụng obstacle thì thua
-        Coordinate ob1Coor, ob2Coor;
-        ob1Coor = ((MyApplication)mContext.getApplicationContext()).mObstacle1CurrentCoor;
-        ob2Coor = ((MyApplication)mContext.getApplicationContext()).mObstacle2CurrentCoor;
+        Obstacle obst1, obst2;
+        obst1 = ((MyApplication)mContext.getApplicationContext()).mObstacle1Current;
+        obst2 = ((MyApplication)mContext.getApplicationContext()).mObstacle2Current;
         Boolean isTouching;
-        if(ob1Coor.mX < ob2Coor.mX){ // ob1    ob2
-            isTouching= isAladdinTouching(ob1Coor);
+        if(obst1.mCoor.mX < obst2.mCoor.mX){ // ob1    ob2
+            isTouching= isAladdinTouching(obst1);
         } else{ // ob2    ob1
-            isTouching= isAladdinTouching(ob2Coor);
+            isTouching= isAladdinTouching(obst2);
         }
         if(isTouching) endGame();
 
@@ -171,9 +173,9 @@ public class Aladdin extends GameObjectBase {
     }
 
 
-    public boolean isAladdinTouching(Coordinate obsCoor){
+    public boolean isAladdinTouching(Obstacle obst){
         int aladdinNose = this.mCoor.mX + this.width;
-        if(aladdinNose >= obsCoor.mX && aladdinNose >= obsCoor.mX + 52)
+        if(aladdinNose >= obst.mCoor.mX && aladdinNose >= obst.mCoor.mX + 52)
             return true;
 
         return false;

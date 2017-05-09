@@ -3,6 +3,7 @@ package com.example.n50.speedyaladdin.Models;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.example.n50.speedyaladdin.Constant;
 import com.example.n50.speedyaladdin.MyApplication;
@@ -79,6 +80,7 @@ public class Obstacle extends GameObjectBase {
 
 
     public void update()  {
+        Log.d("NOGIAS", "Obstacle update()");
         if(((MyApplication)mContext.getApplicationContext()).isPlaying == true){
             this.mColUsing++;
             if(mColUsing >= this.mColCount)  {
@@ -113,9 +115,9 @@ public class Obstacle extends GameObjectBase {
                 if(this.mCoor.mX + this.width < 0){
                     Coordinate otherObstacleCoor;
                     if(this.mID == 1){ // obstacle 1
-                        otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
+                        otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2Current.mCoor;
                     } else { // obstacle 2
-                        otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
+                        otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1Current.mCoor;
                     }
 
                     if (otherObstacleCoor.mX <= mGameSurface.getWidth()/2){
@@ -127,9 +129,9 @@ public class Obstacle extends GameObjectBase {
             } else { // WAND
                 Coordinate towerObstacleCoor;
                 if(this.mID == 1){ // obstacle 1
-                    towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
+                    towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1Current.mCoor;
                 } else { // obstacle 2
-                    towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
+                    towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2Current.mCoor;
                 }
                 // Tính toán vị trí mới của nhân vật.
                 this.mCoor.mX = towerObstacleCoor.mX;
