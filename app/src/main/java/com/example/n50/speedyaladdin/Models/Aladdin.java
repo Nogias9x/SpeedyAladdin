@@ -17,6 +17,9 @@ public class Aladdin extends GameObjectBase {
     private static final int ROW_TOP_TO_BOTTOM = 1;
     private static final int ROW_STAND_STILL = 2;
 
+    public static int mPaddingHor;
+    public static int mPaddingVer;
+
     // Dòng ảnh đang được sử dụng.
     private int mRowUsing = ROW_STAND_STILL;
 
@@ -43,12 +46,13 @@ public class Aladdin extends GameObjectBase {
 
         super(context, image, 3, 16, x, y);
 
+        mPaddingVer = (int)(0.1* getHeight());
+        mPaddingHor = (int)(0.1* getWidth());
 
 
         this.mGameSurface = mGameSurface;
 
         this.mTopToBottoms = new Bitmap[mColCount]; // 3
-//        this.rightToLefts = new Bitmap[mColCount]; // 3
         this.mBottomToTops = new Bitmap[mColCount]; // 3
         this.mStandStills = new Bitmap[mColCount]; // 3
 
@@ -137,11 +141,17 @@ public class Aladdin extends GameObjectBase {
             obst1 = ((MyApplication)mContext.getApplicationContext()).mObstacle1Current;
             obst2 = ((MyApplication)mContext.getApplicationContext()).mObstacle2Current;
             Boolean isTouching;
-            if(obst1.mCoor.mX < obst2.mCoor.mX){ // ob1    ob2
-                isTouching= isAladdinTouching(obst1);
-            } else{ // ob2    ob1
-                isTouching= isAladdinTouching(obst2);
+
+            if(obst1.mCoor.mX < 0) isTouching= isAladdinTouching(obst2);      // ||||  ob2   ||||
+            else if(obst2.mCoor.mX < 0) isTouching= isAladdinTouching(obst1); // ||||  ob1   ||||
+            else {
+                if(obst1.mCoor.mX < obst2.mCoor.mX){ // |||| ob1    ob2 ||||
+                    isTouching= isAladdinTouching(obst1);
+                } else{ //  |||| ob2    ob1 ||||
+                    isTouching= isAladdinTouching(obst2);
+                }
             }
+
             if(isTouching) endGame();
         }
 
@@ -177,17 +187,18 @@ public class Aladdin extends GameObjectBase {
 
 
     public boolean isAladdinTouching(Obstacle obst){
-        int aladdinNose = this.mCoor.mX + this.width;
-        if(aladdinNose >= obst.mCoor.mX && aladdinNose >= obst.mCoor.mX + 52)
-            return true;
+        Coordinate aladdinNose =  new Coordinate(this.mCoor.mX + this.width, this.mCoor.mY);
+        if( aladdinNose.mX - mPaddingHor >= obst.mCoor.mX && this.mCoor.mX + mPaddingHor <= obst.mCoor.mX + obst.getWidth() //Aladdin bay tới obstacle
+            && (aladdinNose.mY + mPaddingVer < obst.mCoor.mY + obst.getHeight() // đầu Aladdin chạm wand
+                || aladdinNose.mY + this.height - mPaddingVer > obst.mCoor.mY + obst.getHeight() + Constant.DISTANCE_BOTTOM_TOP_OBSTACLE) // chân Aladdin chạm vào tower
+           ) {
+            Log.d("TOUCH", "");
 
+            return true;
+        }
         return false;
     }
     public void endGame(){
-        Log.d("ENDGAME", "ENDGAME!!!!!");
-//        mGameSurface.drawText();
         ((MyApplication)mContext.getApplicationContext()).isEndGame = true;
-
-
     }
 }

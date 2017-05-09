@@ -30,9 +30,7 @@ public abstract class GameObjectBase {
         this.mRowCount = mRowCount;
         this.mColCount = mColCount;
 
-        this.mCoor = new Coordinate();
-        this.mCoor.mX = x;
-        this.mCoor.mY= y;
+        this.mCoor = new Coordinate(x, y);
 
         this.WIDTH = mImage.getWidth();
         this.HEIGHT = mImage.getHeight();

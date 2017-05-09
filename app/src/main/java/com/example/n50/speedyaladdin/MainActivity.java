@@ -12,7 +12,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("LOGGGGG", "onCreate");
 
         // Set fullscreen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("LOGGGGG", "onResume");
 
 //        // Set fullscreen
 //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -38,26 +36,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("LOGGGGG", "onStart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("LOGGGGG", "onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("LOGGGGG", "onDestroy");
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("LOGGGGG", "onPause");
         finish();
         System.exit(0);
 
@@ -66,7 +60,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.d("LOGGGGG", "onBackPressed");
-
     }
 }

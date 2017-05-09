@@ -37,10 +37,10 @@ public class Obstacle extends GameObjectBase {
     private GameSurface mGameSurface;
 
     public void setVisibleHeight() {
-        if(this.mObstacleType == Constant.ObstacleType.TOWER){
+        if(this.mObstacleType == Constant.ObstacleType.WAND){
             this.mVisibleHeight = (mRandSeed.nextInt(Constant.VISIBLE_HEIGHT_MAX) + Constant.VISIBLE_HEIGHT_MIN);
-            this.mCoor.mY = this.mGameSurface.getHeight() - 100*this.mVisibleHeight;
-        } else { //WAND
+            this.mCoor.mY = 100*this.mVisibleHeight - this.height;
+        } else { //TOWER
             this.mCoor.mY = 0; //toto: sua theo tower
         }
 
@@ -100,7 +100,7 @@ public class Obstacle extends GameObjectBase {
                 // Đổi nano giây ra mili giây (1 nanosecond = 1000000 millisecond).
                 int deltaTime = (int) ((now - mLastDrawNanoTime) / 1000000);
 
-                if (this.mObstacleType == Constant.ObstacleType.TOWER) {
+                if (this.mObstacleType == Constant.ObstacleType.WAND) {
                     //        // Quãng đường mà nhân vật đi được (fixel).
                     float distance = Constant.OBSTACLE_VELOCITY * deltaTime;
 //
@@ -127,16 +127,16 @@ public class Obstacle extends GameObjectBase {
                         }
                     }
 
-                } else { // WAND
-                    Coordinate towerObstacleCoor;
+                } else { // TOWER
+                    Obstacle wandObstacle;
                     if (this.mID == 1) { // obstacle 1
-                        towerObstacleCoor = ((MyApplication) this.mContext.getApplicationContext()).mObstacle1Current.mCoor;
+                        wandObstacle = ((MyApplication) this.mContext.getApplicationContext()).mObstacle1Current;
                     } else { // obstacle 2
-                        towerObstacleCoor = ((MyApplication) this.mContext.getApplicationContext()).mObstacle2Current.mCoor;
+                        wandObstacle = ((MyApplication) this.mContext.getApplicationContext()).mObstacle2Current;
                     }
                     // Tính toán vị trí mới của nhân vật.
-                    this.mCoor.mX = towerObstacleCoor.mX;
-                    this.mCoor.mY = towerObstacleCoor.mY - Constant.DISTANCE_BOTTOM_TOP_OBSTACLE - this.height;
+                    this.mCoor.mX = wandObstacle.mCoor.mX;
+                    this.mCoor.mY = wandObstacle.mCoor.mY + wandObstacle.getHeight() + Constant.DISTANCE_BOTTOM_TOP_OBSTACLE;// - Constant.DISTANCE_BOTTOM_TOP_OBSTACLE - this.height;
 
                 }
 
@@ -155,7 +155,6 @@ public class Obstacle extends GameObjectBase {
 //        }
 //
 //        //rớt xuống đất là thua
-//        Log.d("NOGIAS","Image.Y:" + this.height + "; Aladdin Y: " + this.y);
 //        if(this.y > this.mGameSurface.getHeight()- height){
 //            this.mMovingVectorX= 0;
 //            this.mMovingVectorY = 0;

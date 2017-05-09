@@ -17,7 +17,6 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -120,13 +119,15 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void update()  {
         this.aladdin.update();
         ((MyApplication)getContext().getApplicationContext()).mAladdinCurrentCoor = aladdin.mCoor;
-        this.obstacleTower1.update();
-        ((MyApplication)getContext().getApplicationContext()).mObstacle1Current = obstacleTower1;
         this.obstacleWand1.update();
+        ((MyApplication)getContext().getApplicationContext()).mObstacle1Current = obstacleWand1;
+        this.obstacleTower1.update();
 
-        this.obstacleTower2.update();
-        ((MyApplication)getContext().getApplicationContext()).mObstacle2Current = obstacleTower2;
+
         this.obstacleWand2.update();
+        ((MyApplication)getContext().getApplicationContext()).mObstacle2Current = obstacleWand2;
+        this.obstacleTower2.update();
+
     }
 
 
@@ -135,7 +136,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas)  {
         super.draw(canvas);
 
-        Log.d("NOGIAS", "GameSuface draw()");
         canvas.drawBitmap(mScaledBackground, 0, 0, null); // draw the background
         this.aladdin.draw(canvas);
         this.obstacleTower1.draw(canvas);
@@ -143,6 +143,21 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         this.obstacleTower2.draw(canvas);
         this.obstacleWand2.draw(canvas);
+
+
+        Paint paintText = new Paint();
+        paintText.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
+        paintText.setColor(Color.GREEN);
+        paintText.setTextSize(70);
+
+
+        canvas.drawRect(aladdin.mCoor.mX +Aladdin.mPaddingHor, //left
+                aladdin.mCoor.mY +Aladdin.mPaddingVer, //top
+                aladdin.mCoor.mX + aladdin.getWidth() -Aladdin.mPaddingHor, //right
+                 aladdin.mCoor.mY + aladdin.getHeight() -Aladdin.mPaddingVer,//bottom
+                paintText);
+
+
 
         // draw text
         if(((MyApplication)getContext().getApplicationContext()).isPlaying == false) {
@@ -172,6 +187,8 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         paintText.setColor(Color.GREEN);
         paintText.setTextSize(70);
         canvas.drawText(stringStart, 200, getHeight()/2 - 100, paintText);
+
+
     }
 
     // Thi hành phương thức của interface SurfaceHolder.Callback
@@ -225,10 +242,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         Bitmap obstacleTowerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
         Bitmap obstacleWandBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.wand);
-        this.obstacleTower1 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 1, obstacleTowerBitmap, displayMetrics.widthPixels, 0);
+
         this.obstacleWand1 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 1, obstacleWandBitmap, displayMetrics.widthPixels, 0);
-        this.obstacleTower2 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 2, obstacleTowerBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
+        this.obstacleTower1 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 1, obstacleTowerBitmap, displayMetrics.widthPixels, 0);
         this.obstacleWand2 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 2, obstacleWandBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
+        this.obstacleTower2 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 2, obstacleTowerBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
 
         ((MyApplication)((Activity) getContext()).getApplication()).mObstacle1Current = this.obstacleWand1;
         ((MyApplication)((Activity) getContext()).getApplication()).mObstacle2Current = this.obstacleWand2;
