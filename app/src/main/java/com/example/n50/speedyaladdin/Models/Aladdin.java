@@ -3,8 +3,10 @@ package com.example.n50.speedyaladdin.Models;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.example.n50.speedyaladdin.Constant;
+import com.example.n50.speedyaladdin.MyApplication;
 
 /**
  * Created by 12124 on 4/30/2017.
@@ -124,7 +126,20 @@ public class Aladdin extends GameObjectBase {
         if(this.mCoor.mY > this.mGameSurface.getHeight()- height){
             this.mMovingVectorX = 0;
             this.mMovingVectorY = 0;
+            endGame();
         }
+
+        //todo: đụng obstacle thì thua
+        Coordinate ob1Coor, ob2Coor;
+        ob1Coor = ((MyApplication)mContext.getApplicationContext()).mObstacle1CurrentCoor;
+        ob2Coor = ((MyApplication)mContext.getApplicationContext()).mObstacle2CurrentCoor;
+        Boolean isTouching;
+        if(ob1Coor.mX < ob2Coor.mX){ // ob1    ob2
+            isTouching= isAladdinTouching(ob1Coor);
+        } else{ // ob2    ob1
+            isTouching= isAladdinTouching(ob2Coor);
+        }
+        if(isTouching) endGame();
 
     }
 
@@ -146,12 +161,25 @@ public class Aladdin extends GameObjectBase {
             this.mYPostionWhenTap = this.mCoor.mY;
             this.mRowUsing = ROW_BOTTOM_TO_TOP;
             this.mMovingVectorX = 0;
-            this.mMovingVectorY = -1;
+            this.mMovingVectorY = -2;
         } else {
             this.mRowUsing = ROW_TOP_TO_BOTTOM;
             this.mMovingVectorX = 0;
-            this.mMovingVectorY = 1;
+            this.mMovingVectorY = 2;
         }
+
+    }
+
+
+    public boolean isAladdinTouching(Coordinate obsCoor){
+        int aladdinNose = this.mCoor.mX + this.width;
+        if(aladdinNose >= obsCoor.mX && aladdinNose >= obsCoor.mX + 52)
+            return true;
+
+        return false;
+    }
+    public void endGame(){
+        Log.d("ENDGAME", "ENDGAME!!!!!");
 
     }
 }

@@ -12,10 +12,12 @@ public class MyApplication extends Application{
     public Coordinate mAladdinCurrentCoor;
     public Coordinate mObstacle1CurrentCoor;
     public Coordinate mObstacle2CurrentCoor;
+    public boolean isPlaying;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        isPlaying = false;
         mAladdinCurrentCoor = new Coordinate();
         mObstacle1CurrentCoor = new Coordinate();
         mObstacle2CurrentCoor = new Coordinate();

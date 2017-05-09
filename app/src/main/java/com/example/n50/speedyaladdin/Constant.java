@@ -5,9 +5,9 @@ package com.example.n50.speedyaladdin;
  */
 
 public final class Constant {
-    public static final int DISTANCE_BOTTOM_TOP_OBSTACLE = 500;
-    public static final int VISIBLE_HEIGHT_MAX = 10;
-    public static final int VISIBLE_HEIGHT_MIN = 4;
+    public static final int DISTANCE_BOTTOM_TOP_OBSTACLE = 600;
+    public static final int VISIBLE_HEIGHT_MAX = 8;
+    public static final int VISIBLE_HEIGHT_MIN = 3;
 
     public static final float ALADDIN_VELOCITY = 0.4f;
     public static final float OBSTACLE_VELOCITY = 0.3f;

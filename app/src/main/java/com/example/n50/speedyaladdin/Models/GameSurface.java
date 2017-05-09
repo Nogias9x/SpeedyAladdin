@@ -9,7 +9,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,6 +39,12 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private Obstacle obstacleWand1;
     private Obstacle obstacleWand2;
 
+    private static final int MAX_STREAMS = 100;
+//    private int soundIdExplosion;
+    private int soundIdBackground;
+    private boolean soundPoolLoaded;
+    private SoundPool soundPool;
+
     public GameSurface(Context context)  {
         super(context);
 
@@ -41,8 +55,68 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         // Sét đặt các sự kiện liên quan tới Game.
         this.getHolder().addCallback(this);
+
+        this.initSoundPool();
     }
 
+    private void initSoundPool()  {
+        // Với phiên bản Android API >= 21
+        if (Build.VERSION.SDK_INT >= 21 ) {
+            AudioAttributes audioAttrib = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            SoundPool.Builder builder= new SoundPool.Builder();
+            builder.setAudioAttributes(audioAttrib).setMaxStreams(MAX_STREAMS);
+
+            this.soundPool = builder.build();
+        }
+        // Với phiên bản Android API < 21
+        else {
+            // SoundPool(int maxStreams, int streamType, int srcQuality)
+            this.soundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
+        }
+
+
+        // Sự kiện SoundPool đã tải lên bộ nhớ thành công.
+        this.soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                soundPoolLoaded = true;
+
+                // Phát nhạc nền
+                playSoundBackground();
+            }
+        });
+
+        // Tải file nhạc tiếng nổ (background.mp3) vào SoundPool.
+        this.soundIdBackground= this.soundPool.load(this.getContext(), R.raw.background,1);
+
+        // Tải file nhạc tiếng nổ (explosion.wav) vào SoundPool.
+//        this.soundIdExplosion = this.soundPool.load(this.getContext(), R.raw.explosion,1);
+
+
+    }
+//    public void playSoundExplosion()  {
+//        if(this.soundPoolLoaded) {
+//            float leftVolumn = 0.8f;
+//            float rightVolumn =  0.8f;
+//
+//            // Phát âm thanh explosion.wav
+//            int streamId = this.soundPool.play(this.soundIdExplosion,leftVolumn, rightVolumn, 1, 0, 1f);
+//        }
+//    }
+
+    public void playSoundBackground()  {
+        if(this.soundPoolLoaded) {
+            float leftVolumn = 0.8f;
+            float rightVolumn =  0.8f;
+
+            // Phát âm thanh background.mp3
+            int streamId = this.soundPool.play(this.soundIdBackground,leftVolumn, rightVolumn, 1, -1, 1f);
+        }
+    }
     public void update()  {
         this.aladdin.update();
         ((MyApplication)getContext().getApplicationContext()).mAladdinCurrentCoor = aladdin.mCoor;
@@ -69,8 +143,30 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.obstacleTower2.draw(canvas);
         this.obstacleWand2.draw(canvas);
 
+        // draw text
+        if(((MyApplication)getContext().getApplicationContext()).isPlaying == false) {
+            drawStartText(canvas);
+        }
+
+
     }
 
+    public void drawStartText(Canvas canvas){
+        String stringStart= "TAP TO START!!!";
+        Paint stkPaint = new Paint();
+        stkPaint.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
+        stkPaint.setStyle(Paint.Style.STROKE);
+        stkPaint.setTextSize(70);
+        stkPaint.setStrokeWidth(20);
+        stkPaint.setColor(Color.WHITE);
+        canvas.drawText(stringStart, 200, getHeight()/2 - 100, stkPaint);
+
+        Paint paintText = new Paint();
+        paintText.setTypeface(Typeface.create("Arial" , Typeface.BOLD));
+        paintText.setColor(Color.GREEN);
+        paintText.setTextSize(70);
+        canvas.drawText(stringStart, 200, getHeight()/2 - 100, paintText);
+    }
 
     // Thi hành phương thức của interface SurfaceHolder.Callback
     @Override
@@ -91,14 +187,42 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 
         Bitmap aladdinBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.sprite_aladin_flying);
+
+//        //>>
+//        int picw = aladdinBitmap.getWidth();
+//        int pich = aladdinBitmap.getHeight();
+//        int[] pix = new int[picw * pich];
+//        aladdinBitmap.getPixels(pix, 0, picw, 0, 0, picw, pich);
+//
+//        int RR, GG, BB,Y;
+//
+//        for (int i = 0; i < pich; i++){
+//            for (int j = 0; j < picw; j++)
+//            {
+//                int index = i * picw + j;
+//                RR = (pix[index] >> 16) & 0xff;     //bitwise shifting
+//                GG = (pix[index] >> 8) & 0xff;
+//                BB = pix[index] & 0xff;
+//
+//                Log.d("BITMAP", "["+ i +", "+ j +"]= ("+ RR +", "+ GG +", "+ BB +")");
+////                "+ xxx +"
+//
+//                //R,G.B - Red, Green, Blue
+//                //to restore the values after RGB modification, use
+//                //next statement
+//                pix[index] = 0xff000000 | (RR << 16) | (GG << 8) | BB;
+//            }
+//        }
+//        //<<
+
         this.aladdin = new Aladdin(getContext(), this, aladdinBitmap, x, y);
 
         Bitmap obstacleTowerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.tower);
         Bitmap obstacleWandBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.wand);
-        this.obstacleTower1 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 1, obstacleTowerBitmap, displayMetrics.widthPixels/2, 0);
-        this.obstacleWand1 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 1, obstacleWandBitmap, displayMetrics.widthPixels/2, 0);
-        this.obstacleTower2 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 2, obstacleTowerBitmap, displayMetrics.widthPixels, 0);
-        this.obstacleWand2 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 2, obstacleWandBitmap, displayMetrics.widthPixels, 0);
+        this.obstacleTower1 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 1, obstacleTowerBitmap, displayMetrics.widthPixels, 0);
+        this.obstacleWand1 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 1, obstacleWandBitmap, displayMetrics.widthPixels, 0);
+        this.obstacleTower2 = new Obstacle(getContext(), this, Constant.ObstacleType.TOWER, 2, obstacleTowerBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
+        this.obstacleWand2 = new Obstacle(getContext(), this, Constant.ObstacleType.WAND, 2, obstacleWandBitmap, (int)(1.5*displayMetrics.widthPixels), 0);
 
 
         this.gameThread = new GameThread(this,holder);
@@ -136,6 +260,8 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int x=  (int)event.getX();
             int y = (int)event.getY();
+
+            ((MyApplication)getContext().getApplicationContext()).isPlaying = true;
 
 //            int movingVectorX =x-  this.aladdin.getX() ;
 //            int movingVectorY =y-  this.aladdin.getY() ;

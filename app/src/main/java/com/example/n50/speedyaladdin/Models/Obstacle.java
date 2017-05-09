@@ -79,62 +79,63 @@ public class Obstacle extends GameObjectBase {
 
 
     public void update()  {
-        this.mColUsing++;
-        if(mColUsing >= this.mColCount)  {
-            this.mColUsing =0;
-        }
+        if(((MyApplication)mContext.getApplicationContext()).isPlaying == true){
+            this.mColUsing++;
+            if(mColUsing >= this.mColCount)  {
+                this.mColUsing =0;
+            }
 
-        // Thời điểm hiện tại theo nano giây.
-        long now = System.nanoTime();
+            // Thời điểm hiện tại theo nano giây.
+            long now = System.nanoTime();
 
 
-        // Chưa vẽ lần nào.
-        if(mLastDrawNanoTime ==-1) {
-            mLastDrawNanoTime = now;
-        }
+            // Chưa vẽ lần nào.
+            if(mLastDrawNanoTime ==-1) {
+                mLastDrawNanoTime = now;
+            }
 
-        // Đổi nano giây ra mili giây (1 nanosecond = 1000000 millisecond).
-        int deltaTime = (int) ((now - mLastDrawNanoTime)/ 1000000 );
+            // Đổi nano giây ra mili giây (1 nanosecond = 1000000 millisecond).
+            int deltaTime = (int) ((now - mLastDrawNanoTime)/ 1000000 );
 
-        if(this.mObstacleType == Constant.ObstacleType.TOWER){
-            //        // Quãng đường mà nhân vật đi được (fixel).
-            float distance = Constant.OBSTACLE_VELOCITY * deltaTime;
+            if(this.mObstacleType == Constant.ObstacleType.TOWER){
+                //        // Quãng đường mà nhân vật đi được (fixel).
+                float distance = Constant.OBSTACLE_VELOCITY * deltaTime;
 //
-            double movingVectorLength = Math.sqrt(mMovingVectorX * mMovingVectorX + mMovingVectorY * mMovingVectorY);
+                double movingVectorLength = Math.sqrt(mMovingVectorX * mMovingVectorX + mMovingVectorY * mMovingVectorY);
 //
 //
 //        // Tính toán vị trí mới của nhân vật.
-            this.mCoor.mX = this.mCoor.mX +  (int)(distance* mMovingVectorX / movingVectorLength);
-            this.mCoor.mY = this.mCoor.mY +  (int)(distance* mMovingVectorY / movingVectorLength);
+                this.mCoor.mX = this.mCoor.mX +  (int)(distance* mMovingVectorX / movingVectorLength);
+                this.mCoor.mY = this.mCoor.mY +  (int)(distance* mMovingVectorY / movingVectorLength);
 
 
-            //đụng vách trái thì trờ lại vách phải
-            if(this.mCoor.mX + this.width < 0){
-                Coordinate otherObstacleCoor;
+                //đụng vách trái thì trờ lại vách phải
+                if(this.mCoor.mX + this.width < 0){
+                    Coordinate otherObstacleCoor;
+                    if(this.mID == 1){ // obstacle 1
+                        otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
+                    } else { // obstacle 2
+                        otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
+                    }
+
+                    if (otherObstacleCoor.mX <= mGameSurface.getWidth()/2){
+                        setVisibleHeight();
+                        this.mCoor.mX = this.mGameSurface.getWidth();
+                    }
+                }
+
+            } else { // WAND
+                Coordinate towerObstacleCoor;
                 if(this.mID == 1){ // obstacle 1
-                    otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
+                    towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
                 } else { // obstacle 2
-                    otherObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
+                    towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
                 }
+                // Tính toán vị trí mới của nhân vật.
+                this.mCoor.mX = towerObstacleCoor.mX;
+                this.mCoor.mY = towerObstacleCoor.mY - Constant.DISTANCE_BOTTOM_TOP_OBSTACLE - this.height;
 
-                if (otherObstacleCoor.mX <= mGameSurface.getWidth()/2){
-                    setVisibleHeight();
-                    this.mCoor.mX = this.mGameSurface.getWidth();
-                }
             }
-
-        } else { // WAND
-            Coordinate towerObstacleCoor;
-            if(this.mID == 1){ // obstacle 1
-                towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle1CurrentCoor;
-            } else { // obstacle 2
-                towerObstacleCoor = ((MyApplication)this.mContext.getApplicationContext()).mObstacle2CurrentCoor;
-            }
-            // Tính toán vị trí mới của nhân vật.
-            this.mCoor.mX = towerObstacleCoor.mX;
-            this.mCoor.mY = towerObstacleCoor.mY - Constant.DISTANCE_BOTTOM_TOP_OBSTACLE - this.height;
-
-        }
 
 //        //di chuyển từ phải qua trái
 //        setMovingVectorForObstacle();
@@ -156,6 +157,7 @@ public class Obstacle extends GameObjectBase {
 //            this.mMovingVectorX= 0;
 //            this.mMovingVectorY = 0;
 //        }
+        }
     }
 
     public void draw(Canvas canvas)  {
