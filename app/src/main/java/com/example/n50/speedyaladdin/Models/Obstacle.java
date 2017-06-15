@@ -3,7 +3,6 @@ package com.example.n50.speedyaladdin.Models;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.example.n50.speedyaladdin.Constant;
 import com.example.n50.speedyaladdin.MyApplication;
@@ -32,23 +31,25 @@ public class Obstacle extends GameObjectBase {
     private int mMovingVectorX = 0;
     private int mMovingVectorY = 0;
 
-    private long mLastDrawNanoTime =-1;
+    private long mLastDrawNanoTime = -1;
 
     private GameSurface mGameSurface;
 
-    public void setVisibleHeight() {
-        if(this.mObstacleType == Constant.ObstacleType.WAND){
-            this.mVisibleHeight = (mRandSeed.nextInt(Constant.VISIBLE_HEIGHT_MAX) + Constant.VISIBLE_HEIGHT_MIN);
-            this.mCoor.mY = 100*this.mVisibleHeight - this.height;
-        } else { //TOWER
-            this.mCoor.mY = 0; //toto: sua theo tower
-        }
+    // padding của Obstacle
+    public static int mPaddingHor;
+    public static int mPaddingVer;
 
-    }
 
     public Obstacle(Context context, GameSurface mGameSurface, Constant.ObstacleType obstacleType, int id, Bitmap image, int x, int y) {
 
         super(context, image, 1, 1, x, y);
+
+        // xác định padding
+        mPaddingHor = (int) (0.2 * getWidth());
+        mPaddingVer = mPaddingHor;//(int) (0.1 * getHeight());
+
+
+
         this.mGameSurface = mGameSurface;
 
         this.mObstacleType = obstacleType;
@@ -58,29 +59,37 @@ public class Obstacle extends GameObjectBase {
         this.mCoor.mX = x;
 
 
-
-
         this.mObstacleImage = new Bitmap[mColCount]; // 3
 
-        for(int col = 0; col< this.mColCount; col++ ) {
-            this.mObstacleImage[col]  = image;
+        for (int col = 0; col < this.mColCount; col++) {
+            this.mObstacleImage[col] = image;
         }
 
         setMovingVectorForObstacle();
     }
 
-    public Bitmap[] getMoveBitmaps()  {
+    public void setVisibleHeight() {
+        if (this.mObstacleType == Constant.ObstacleType.WAND) {
+            this.mVisibleHeight = (mRandSeed.nextInt(Constant.VISIBLE_HEIGHT_MAX) + Constant.VISIBLE_HEIGHT_MIN);
+            this.mCoor.mY = 100 * this.mVisibleHeight - this.height;
+        } else { //TOWER
+            this.mCoor.mY = 0; //toto: sua theo tower
+        }
+
+    }
+
+    public Bitmap[] getMoveBitmaps() {
         return this.mObstacleImage;
     }
 
-    public Bitmap getCurrentMoveBitmap()  {
+    public Bitmap getCurrentMoveBitmap() {
         Bitmap[] bitmaps = this.getMoveBitmaps();
         return bitmaps[this.mColUsing];
     }
 
 
-    public void update()  {
-        if(((MyApplication)mContext.getApplicationContext()).mIsEndGame == true) {
+    public void update() {
+        if (((MyApplication) mContext.getApplicationContext()).mIsEndGame == true) {
         } else {
             if (((MyApplication) mContext.getApplicationContext()).mIsPlaying == true) {
                 this.mColUsing++;
@@ -126,7 +135,7 @@ public class Obstacle extends GameObjectBase {
                             this.mCoor.mX = this.mGameSurface.getWidth();
 
                             // cộng điểm
-                            ((MyApplication)mContext.getApplicationContext()).mScore ++;
+                            ((MyApplication) mContext.getApplicationContext()).mScore++;
                         }
 
 
@@ -168,7 +177,7 @@ public class Obstacle extends GameObjectBase {
         }
     }
 
-    public void draw(Canvas canvas)  {
+    public void draw(Canvas canvas) {
         Bitmap bitmap = this.getCurrentMoveBitmap();
         canvas.drawBitmap(bitmap, this.mCoor.mX, this.mCoor.mY, null);
 
@@ -176,12 +185,12 @@ public class Obstacle extends GameObjectBase {
         this.mLastDrawNanoTime = System.nanoTime();
     }
 
-    public void setMovingVectorForObstacle()  {
+    public void setMovingVectorForObstacle() {
         this.mMovingVectorX = -1;
         this.mMovingVectorY = 0;
     }
 
-    public void setMovingVectorForFlying(boolean isUp)  {
+    public void setMovingVectorForFlying(boolean isUp) {
 //        if(isUp){
 //            this.yPostionWhenTap = this.y;
 //            this.rowUsing = ROW_BOTTOM_TO_TOP;

@@ -8,27 +8,10 @@ public class Coordinate {
     public int mX;
     public int mY;
 
-    public Coordinate() {
-    }
+    public Coordinate() {}
 
     public Coordinate(int mX, int mY) {
         this.mX = mX;
-        this.mY = mY;
-    }
-
-    public int getX() {
-        return mX;
-    }
-
-    public void setX(int mX) {
-        this.mX = mX;
-    }
-
-    public int getY() {
-        return mY;
-    }
-
-    public void setY(int mY) {
         this.mY = mY;
     }
 }

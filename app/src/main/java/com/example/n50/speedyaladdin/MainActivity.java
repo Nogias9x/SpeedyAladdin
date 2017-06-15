@@ -24,13 +24,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-//        // Set fullscreen
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
-//        // Sét đặt giao diện của Activity.
-//        this.setContentView(new GameSurface(this));
     }
 
     @Override

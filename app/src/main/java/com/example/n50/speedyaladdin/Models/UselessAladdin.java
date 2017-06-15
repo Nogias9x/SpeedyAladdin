@@ -1,13 +1,10 @@
 package com.example.n50.speedyaladdin.Models;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-
 /**
  * Created by 12124 on 4/30/2017.
  */
 
-public class UselessAladdin{// extends GameObjectBase {
+public class UselessAladdin {// extends GameObjectBase {
 //
 ////    private static final int ROW_TOP_TO_BOTTOM = 0;
 ////    private static final int ROW_RIGHT_TO_LEFT = 1;

@@ -30,7 +30,6 @@ public class MyApplication extends Application{
         SharedPreferences prefs = getSharedPreferences(Constant.MY_PREFS, MODE_PRIVATE);
         mBestScore = prefs.getInt(Constant.PREF_BEST_SCORE, 0);
 
-        Log.d("SCORE","Load: " + mBestScore);
 
         mAladdinCurrentCoor = new Coordinate();
     }
