@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="Aladdin - Beginning (Arabian Nights) HD_data" version="1.3.0" audacityversion="2.0.6" sel0="0.6714944042" sel1="0.6714944042" vpos="0" h="0.0000000000" zoom="50.6333333333" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds">
+	<tags>
+		<tag name="major_brand" value="dash"/>
+		<tag name="Software" value="Lavf54.20.4"/>
+		<tag name="minor_version" value="0"/>
+		<tag name="compatible_brands" value="iso6mp41"/>
+		<tag name="Encoding time" value="2015-11-11 11:44:43"/>
+	</tags>
+	<wavetrack name="Aladdin - Beginning (Arabian Nights) HD" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="626226">
+				<waveblock start="0">
+					<simpleblockfile filename="e00006fd.au" len="190211" min="-0.255222" max="0.225929" rms="0.048873"/>
+				</waveblock>
+				<waveblock start="190211">
+					<simpleblockfile filename="e00005a1.au" len="190212" min="-0.182255" max="0.187927" rms="0.039152"/>
+				</waveblock>
+				<waveblock start="380423">
+					<simpleblockfile filename="e0000b31.au" len="245803" min="-0.394973" max="0.364817" rms="0.050136"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Aladdin - Beginning (Arabian Nights) HD" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="626226">
+				<waveblock start="0">
+					<simpleblockfile filename="e000077a.au" len="190211" min="-0.25483" max="0.268377" rms="0.050717"/>
+				</waveblock>
+				<waveblock start="190211">
+					<simpleblockfile filename="e00007bf.au" len="190212" min="-0.223914" max="0.180884" rms="0.040925"/>
+				</waveblock>
+				<waveblock start="380423">
+					<simpleblockfile filename="e000072c.au" len="245803" min="-0.390148" max="0.435077" rms="0.054002"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
